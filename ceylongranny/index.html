@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Granny's Addressbook</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta content="Brian Crucitti" name="author" />
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js" ></script>
+	<script type="text/javascript" src="scripts.js" ></script>
+	<link media="screen" type="text/css" href="main.css" rel="stylesheet" />
+</head>
+<body>
+<div id="divContent">
+<div id="divTitle">
+	<h2>Granny's Addressbook</h2>
+</div>
+<div id="divAlerts">
+<ul id="alerts">
+</ul>
+</div>
+<div id="divContact">
+<form>
+	<label for="frmName">Name:</label>
+	<input type="text" id="frmName" name="frmName" />
+	
+	<label for="frmAddress">Address:</label>
+	<textarea rows="5" cols="40" id="frmAddress" name="frmAddress" ></textarea>
+	
+	<label for="frmPhone">Phone:</label>
+	<input type="text" id="frmPhone" name="frmPhone" />
+	
+	<label for="frmEmail">Email:</label>
+	<input type="text" id="frmEmail" name="frmEmail" />
+	
+	<button onclick="saveContact(); return false;" >Save</button>
+</form>
+</div>
+
+<div id="divContactList">
+<form>
+	<select size="15" id="frmContacts">
+		<option value="-1" selected></option>
+	</select>
+	<button type="button" onclick="deleteContact(); return false;" >Delete</button>
+</form>
+</div>
+</div>
+</body>
+</html>

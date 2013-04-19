@@ -1,0 +1,47 @@
+label {
+	display: block;
+}
+input, textarea {
+	display: block;
+	margin-left: 10px;
+	margin-bottom: 25px;
+}
+select {
+	display: block;
+	margin-bottom: 20px;
+}
+
+#frmContacts {
+	min-width: 200px;
+}
+#alerts {
+	color: red;
+}
+
+#divContent {
+	width: 900px;
+	margin: auto;
+}
+#divTitle {
+	text-align: center;
+}
+#divContact {
+	float: left;
+	margin-left: 40px;
+}
+#divContactList {
+	float: right;
+	margin-right: 40px;
+}
+
+.clear{
+	clear: both;
+}
+
+html, body {
+	width: 100%;
+	height: 100%;
+}
+body{
+	background-color: lightgrey;
+}
