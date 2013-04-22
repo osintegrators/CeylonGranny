@@ -1,45 +1,33 @@
-import ceylon.net.http.server { ...  }
-import ceylon.io { ... }
-import ceylon.io.charset { ... }
-import ceylon.file { ... }
-import ceylon.dbc { ... }
-import ceylon.json { ... }
+import ceylon.net.http.server { createServer, Endpoint, Request, Response, startsWith, AsynchronousEndpoint  }
+import ceylon.io.charset { utf8 }
+import ceylon.file { parsePath, File }
+import ceylon.json { Object, Array }
 import ceylon.math.float { random }
-import ceylon.math.integer { ... }
-import javax.sql { ... }
-import java.sql { DriverManager{ getConnection }, Connection{...}, ResultSet, Statement, PreparedStatement}
+import java.sql { DriverManager{ getConnection }, Connection, ResultSet, Statement, PreparedStatement}
 import java.lang { Class{ forName } }
-import ceylon.collection { ... }
+import ceylon.collection { LinkedList }
 import ceylon.net.http { contentType }
+import ceylon.net.http.server.endpoints { serveStaticFile }
 
 
-void hello() {
+void createGrannyServer() { 
 	value server = createServer {
-        //an endpoint, on the path /hello
-        Endpoint {
+        AsynchronousEndpoint {
             path =  startsWith("/index.html");
-            //handle requests to this path
-            service(Request request, Response response) =>
-                    html("./index.html", request, response);
+            service = serveStaticFile(".");
         	
     	},        
-    	Endpoint {
+    	AsynchronousEndpoint {
             path =  startsWith("/main.css");
-            //handle requests to this path
-            service(Request request, Response response) =>
-                    css("./main.css", request, response);
-        	
+            service = serveStaticFile(".");
     	},        
-    	Endpoint {
+    	AsynchronousEndpoint {
             path =  startsWith("/scripts.js");
-            //handle requests to this path
-            service(Request request, Response response) =>
-                    js("./scripts.js", request, response);
+            service = serveStaticFile(".");
         	
     	},
     	Endpoint {
     		path =  startsWith("/contacts");
-            //handle requests to this path
             service(Request request, Response response) =>
                     contacts(request, response);
         	
@@ -71,9 +59,9 @@ void js(String filename, Request request, Response response) {
 }
 
 void contacts(Request request, Response response) {
-	if(request.method.equals("GET") && request.path.equals("/contacts")) {
+	if(request.method.equals("GET") && request.path.equals("/contacts")) {  // get the list, the path equals /contacts exactly
 		contactsGet(request, response);
-	} else if (request.method.equals("GET") && request.path.startsWith("/contacts")){
+	} else if (request.method.equals("GET") && request.path.startsWith("/contacts")){  //get a contact, it starts with /contacts but has more stuff
 		contactGet(request, response);
 	} else if (request.method.equals("POST")) {
 		contactsPost(request, response);
@@ -82,12 +70,10 @@ void contacts(Request request, Response response) {
 	} else if (request.method.equals("PUT")) {
 		contactPut(request, response);		
 	} else {
-		print("different");
 	}
 }
 
 void contactsPost(Request request, Response response) {
-	print("contactsPost");
 	value pathparsed = request.path.split("/", true, false);
 	Integer id = parseInteger(pathparsed.last else "") else 0;
 	String name = request.parameter("contact[name]") else "";
@@ -95,14 +81,12 @@ void contactsPost(Request request, Response response) {
 	String address = request.parameter("contact[address]") else "";
 	String phone = request.parameter("contact[phone]") else "";
 	String email = request.parameter("contact[email]") else ""; 
-	print(name+","+address+","+phone+""+email);  
 	
 	Contact contact = Contact(id,name,address,phone,email);
 	insertContact(contact);
 }
 
 void contactPut(Request request, Response response) {
-	print("contactPut");
 	value pathparsed = request.path.split("/", true, false);
 	Integer id = parseInteger(pathparsed.last else "") else 0;
 	String name = request.parameter("contact[name]") else "";
@@ -110,14 +94,12 @@ void contactPut(Request request, Response response) {
 	String address = request.parameter("contact[address]") else "";
 	String phone = request.parameter("contact[phone]") else "";
 	String email = request.parameter("contact[email]") else ""; 
-	print(name+","+address+","+phone+""+email);  
 	
 	Contact contact = Contact(id,name,address,phone,email);
 	updateContact(contact);
 }
 
 void contactGet(Request request, Response response) {
-	print("contactGet");
 	value pathparsed = (
 	                        request.path.span(
 	                                            (request.path.firstOccurrence("/contacts/") else 0)+"/contacts/".size,
@@ -130,39 +112,32 @@ void contactGet(Request request, Response response) {
 	response.addHeader(header);
 	Contact? contact = getContact(id);
 	Object json = contactToJson(contact);
-	print(json.string);
 	response.writeString(json.string);	
 }
 
 
 void contactDelete(Request request, Response response) {
-	print("contactDelete");
+
 		value pathparsed = (
 	                        request.path.span(
 	                                            (request.path.firstOccurrence("/contacts/") else 0)+"/contacts/".size,
 	                                            request.path.size -1
 	                                         ) 
-	                   );
+                           );
+
 	Integer id = parseInteger(pathparsed.string) else 0;
-	//Integer ret = 
+
 	deleteContact(id);
-	//value header = contentType("application/json", utf8);
-	
-	//response.addHeader(header);
-	//	response.writeString(Object {
-	//	"id" -> id,
-	//	"return" -> ret 
-	//}.string);
+
 }
 
 
 void contactsGet(Request request, Response response) {
-	print("contactsGet");
+
 	value header = contentType("application/json", utf8);
 	response.addHeader(header);
 	LinkedList<Contact> list = getContactList();
 	Array json = contactListToJson(list);
-	print(json.string);
 	response.writeString(json.string);	
 }
 
@@ -173,7 +148,6 @@ String getFileContent(String filename) {
 	if (is File file = filePath.resource) {
 	    value reader = file.reader();
 	    try {
-	        //variable String? line = "";
 	        while (exists line = reader.readLine()) { //there is no dowhile and you can't really check for nulls but readline may return one...
 	            retval += line + "\n" ;
 	        } 
@@ -183,7 +157,6 @@ String getFileContent(String filename) {
 	    }
 	}
 	else {
-	    print("file does not exist");
 	}
 	return retval;
 }
@@ -215,7 +188,6 @@ LinkedList<Contact> getContactList() {
 }
 
 Integer deleteContact(Integer id) {
-	print(id);
 	// there doesn't appear to be a way to both return a list and use an array list...you have to care.
 	String query = "delete from address where id = ?";
 	Connection conn = getDbConnection();
@@ -228,7 +200,6 @@ Integer deleteContact(Integer id) {
 }
 
 Contact? getContact(Integer id) {
-	print(id);
 	// there doesn't appear to be a way to both return a list and use an array list...you have to care.
 	String query = "select * from address where id = ?";
 	Connection conn = getDbConnection();
