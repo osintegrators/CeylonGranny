@@ -171,7 +171,7 @@ Connection getDbConnection() {
 }
 
 LinkedList<Contact> getContactList() {
-	// there doesn't appear to be a way to both return a list and use an array list...you have to care.
+	// there doesn't appear to be a way to both return a list and use a linked list...you have to care which type
 	LinkedList<Contact> result = LinkedList<Contact>();
 	String query = "select * from address";
 	Connection conn = getDbConnection();
@@ -188,7 +188,6 @@ LinkedList<Contact> getContactList() {
 }
 
 Integer deleteContact(Integer id) {
-	// there doesn't appear to be a way to both return a list and use an array list...you have to care.
 	String query = "delete from address where id = ?";
 	Connection conn = getDbConnection();
 	PreparedStatement stmt = conn.prepareStatement(query);
@@ -200,7 +199,6 @@ Integer deleteContact(Integer id) {
 }
 
 Contact? getContact(Integer id) {
-	// there doesn't appear to be a way to both return a list and use an array list...you have to care.
 	String query = "select * from address where id = ?";
 	Connection conn = getDbConnection();
 	PreparedStatement stmt = conn.prepareStatement(query);

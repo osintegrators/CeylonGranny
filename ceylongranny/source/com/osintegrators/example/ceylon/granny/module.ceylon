@@ -5,7 +5,7 @@ module com.osintegrators.example.ceylon.granny '1.0.0' {
 	import ceylon.io '0.5';
 	import ceylon.json '0.5';
 	import ceylon.math '0.5';
-	import ceylon.net '0.5.2'; 
+	import ceylon.net '0.5.3'; 
 	import java.jdbc '7'; 
 	import java.base '7';
 
