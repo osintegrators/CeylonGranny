@@ -1,8 +1,6 @@
 CeylonGranny
 ============
 
-The MIT License (MIT)
-
 Copyright (c) 2012 Open Software Integrators
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
